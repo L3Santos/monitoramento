@@ -75,7 +75,6 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
             pid: s.pid,
             horarioInicio: new Date(s.horario_inicio),
             status: s.status,
-            finalizada: false
           });
         }
       }
