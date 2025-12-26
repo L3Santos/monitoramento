@@ -13,6 +13,7 @@ import Servicos from "@/pages/Servicos";
 import Processos from "@/pages/Processos";
 import Rede from "@/pages/Rede";
 import Historico from "@/pages/Historico";
+import Netbeans from "@/pages/Netbeans";
 
 function Router() {
   return (
@@ -23,6 +24,7 @@ function Router() {
       <Route path="/processos" component={Processos} />
       <Route path="/rede" component={Rede} />
       <Route path="/historico" component={Historico} />
+      <Route path="/netbeans" component={Netbeans} />
       <Route component={NotFound} />
     </Switch>
   );
