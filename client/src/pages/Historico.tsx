@@ -15,7 +15,7 @@ export default function HistoryPage() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-8">
+      <div className="w-full space-y-8">
         <div>
           <h2 className="text-3xl font-bold font-mono tracking-tight text-glow">Histórico de Performance</h2>
           <p className="text-muted-foreground">Evolução do uso de CPU e Memória ao longo do tempo.</p>

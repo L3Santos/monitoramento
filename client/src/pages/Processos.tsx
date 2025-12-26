@@ -8,7 +8,7 @@ export default function Processes() {
 
   return (
     <DashboardLayout>
-      <div className="w-full space-y-8 px-4 md:px-8 pb-8">
+      <div className="w-full space-y-8">
         <div className="flex items-center gap-4">
           <div className="p-3 rounded-lg bg-primary/10 text-primary border border-primary/20">
             <Cpu className="w-8 h-8" />

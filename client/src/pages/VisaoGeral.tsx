@@ -38,7 +38,7 @@ export default function VisaoGeral() {
 
   return (
     <DashboardLayout>
-      <div className="w-full space-y-8 px-4 md:px-8 pb-8">
+      <div className="w-full space-y-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h2 className="text-3xl font-bold font-mono tracking-tight text-glow">Visão Geral</h2>
