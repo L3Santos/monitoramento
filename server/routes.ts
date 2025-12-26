@@ -25,8 +25,8 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
           memoria: payload.memoria || { total: "0", usada: "0", percentual: 0 },
         },
         anydesk: {
-          ativo: payload.anydesk?.ativo || false,
-          sessoesAtuais: payload.anydesk?.sessoes?.map((s: any) => ({
+          ativo: (payload.anydesk?.sessoes || []).filter((s: any) => s.porta !== 443 && s.porta !== "443").length > 0,
+          sessoesAtuais: payload.anydesk?.sessoes?.filter((s: any) => s.porta !== 443 && s.porta !== "443").map((s: any) => ({
             pid: s.pid,
             ipRemoto: s.ip_remoto,
             porta: s.porta,
@@ -66,12 +66,16 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
 
       if (payload.anydesk?.sessoes) {
         for (const s of payload.anydesk.sessoes) {
+          // Bloqueio duplo: porta 443 não entra no histórico
+          if (s.porta === 443 || s.porta === "443") continue;
+          
           await storage.criarSessaoAnydesk({
             ipRemoto: s.ip_remoto,
             porta: s.porta,
             pid: s.pid,
             horarioInicio: new Date(s.horario_inicio),
             status: s.status,
+            finalizada: false
           });
         }
       }
