@@ -45,9 +45,10 @@ def obter_sessoes_anydesk():
                     # Busca conexões ESTABLISHED de TODOS os processos
                     for conn in psutil.net_connections(kind='inet'):
                         try:
-                            if conn.status == 'ESTABLISHED' and conn.pid == pid:
+                            # Filtro aprimorado: ignorar porta 443 (servidores de controle/heartbeat do AnyDesk)
+                            if conn.status == 'ESTABLISHED' and conn.pid == pid and conn.raddr.port != 443:
                                 ip_remoto = conn.raddr.ip if conn.raddr else "0.0.0.0"
-                                # Filtra para pegar apenas IPs externos
+                                # Filtra para pegar apenas IPs externos e não-administrativos
                                 if not eh_ip_interno(ip_remoto):
                                     sessoes.append({
                                         "pid": pid,
@@ -58,7 +59,7 @@ def obter_sessoes_anydesk():
                                         "usuario": usuario,
                                         "nome_computador": "localhost"
                                     })
-                                    break
+                                    # Não paramos no primeiro break para capturar múltiplas conexões se houver
                         except (psutil.NoSuchProcess, psutil.AccessDenied, AttributeError):
                             continue
             except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
