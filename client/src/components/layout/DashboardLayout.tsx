@@ -172,8 +172,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth flex flex-col">
-          <div className="max-w-7xl mx-auto space-y-8 flex-1">
+        <main className="flex-1 overflow-y-auto p-0 scroll-smooth flex flex-col">
+          <div className="w-full space-y-8 flex-1 py-8">
             {children}
           </div>
           <div className="text-xs text-muted-foreground font-mono text-center py-4 border-t border-border/20 mt-8">

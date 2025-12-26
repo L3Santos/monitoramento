@@ -11,7 +11,7 @@ export default function Network() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-8">
+      <div className="w-full space-y-8 px-4 md:px-8 pb-8">
         <div className="flex items-center gap-4">
           <div className="p-3 rounded-lg bg-blue-500/10 text-blue-500 border border-blue-500/20">
             <NetworkIcon className="w-8 h-8" />
