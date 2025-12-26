@@ -12,7 +12,8 @@ import {
   Sun,
   Moon,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Users
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -36,6 +37,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: "Processos", href: "/processos", icon: Cpu },
     { name: "Rede", href: "/rede", icon: Network },
     { name: "Histórico", href: "/historico", icon: History },
+    { name: "Netbeans", href: "/netbeans", icon: Users },
   ];
 
   return (
