@@ -1,0 +1,217 @@
+1️⃣ AGENTE LOCAL (Ubuntu)
+
+Responsabilidade
+
+Rodar continuamente na máquina
+
+Coletar informações do sistema
+
+Registrar eventos
+
+Expor dados via API HTTP local
+
+O que ele monitora
+
+Processos ativos
+
+Serviços em execução
+
+Uso de CPU e memória
+
+Conexões de rede
+
+Conexões específicas do AnyDesk
+
+Dados capturados do AnyDesk
+
+PID do processo
+
+IP remoto conectado
+
+Porta usada
+
+Horário de início
+
+Horário de término
+
+Tempo total da sessão
+
+Persistência local
+
+Arquivo logs/anydesk_sessions.json
+
+Arquivo logs/system_metrics.json
+
+2️⃣ API LOCAL
+
+Função
+
+Servir os dados para o frontend
+
+Receber eventos do agente
+
+Centralizar leitura dos arquivos de log
+
+Endpoints conceituais
+
+/status/system
+
+/status/processes
+
+/status/services
+
+/status/network
+
+/status/anydesk
+
+/history/anydesk
+
+⚠️ Não precisa autenticação complexa, só acesso local (localhost)
+
+3️⃣ FRONTEND (NEXT.JS NO REPLIT)
+
+Tecnologia
+
+Next.js (App Router)
+
+Dashboard SPA
+
+Atualização periódica (polling)
+
+🖥️ TELAS DO DASHBOARD
+🟢 Dashboard Principal
+
+CPU total
+
+Memória total vs usada
+
+Top 5 processos por consumo
+
+Status do AnyDesk (ativo/inativo)
+
+🔌 Conexões AnyDesk
+
+Tabela com:
+
+Status (Conectado / Desconectado)
+
+IP remoto
+
+Porta
+
+PID
+
+Hora início
+
+Duração da sessão
+
+⚙️ Serviços do Sistema
+
+Nome do serviço
+
+Status (running / stopped)
+
+PID
+
+📊 Processos Ativos
+
+Nome do processo
+
+PID
+
+CPU %
+
+Memória %
+
+Usuário
+
+🌐 Rede & Portas
+
+Porta local
+
+IP remoto
+
+Estado da conexão
+
+Processo associado
+
+📁 LOGS E ARMAZENAMENTO
+🗂️ Local
+
+Formato JSON
+
+Um arquivo por tipo de dado
+
+Rotação diária (1 arquivo por dia)
+
+📊 Google Sheets
+
+Estratégia
+
+O backend local envia os dados
+
+Usa uma conta de serviço do Google
+
+Cada aba representa um tipo de dado:
+
+anydesk_sessions
+
+system_usage
+
+process_usage
+
+Campos da aba AnyDesk
+
+timestamp
+
+ip_remoto
+
+porta
+
+pid
+
+inicio
+
+fim
+
+duracao_segundos
+
+🔄 FLUXO DE FUNCIONAMENTO
+
+Máquina Ubuntu inicia
+
+Agente local inicia junto (systemd)
+
+Agente:
+
+Verifica conexões AnyDesk
+
+Detecta novas conexões
+
+Detecta desconexões
+
+Registra:
+
+Evento em arquivo local
+
+Evento no Google Sheets
+
+Dashboard Next.js:
+
+Consulta API local a cada X segundos
+
+Atualiza gráficos e tabelas
+
+🔐 SEGURANÇA (BÁSICO)
+
+API escutando apenas em localhost
+
+Dashboard protegido por senha simples
+
+Logs somente leitura no frontend
+
+🧠 PROMPT IDEAL PRA VOCÊ JOGAR NO REPLIT AI
+
+Você pode pedir algo como:
+
+“Crie um projeto Next.js que funcione como dashboard de monitoramento de uma máquina Ubuntu local. O frontend deve consumir dados de uma API local que expõe informações de processos, serviços, conexões de rede e sessões do AnyDesk. O sistema deve exibir dashboards em tempo real, histórico de conexões do AnyDesk, consumo de CPU e memória, e salvar logs localmente e também enviar registros para o Google Sheets.”
