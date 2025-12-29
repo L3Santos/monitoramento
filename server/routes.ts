@@ -15,29 +15,7 @@ let snapshotAtual = {
   ultimaAtualizacao: new Date().toISOString(),
 };
 
-  // Registro de acessos para monitoramento
-  const logsAcesso: any[] = [];
-
-  app.use((req, res, next) => {
-    // Ignora requisições de API e estáticos internos para não poluir
-    if (!req.path.startsWith("/api") && !req.path.includes(".")) {
-      const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
-      logsAcesso.unshift({
-        ip,
-        horario: new Date().toISOString(),
-        rota: req.path,
-        userAgent: req.headers["user-agent"]
-      });
-      // Mantém apenas os últimos 100 acessos
-      if (logsAcesso.length > 100) logsAcesso.pop();
-    }
-    next();
-  });
-
-  app.get("/api/acessos", (req, res) => {
-    res.json(logsAcesso);
-  });
-
+export async function registerRoutes(httpServer: Server, app: Express): Promise<Server> {
   app.post("/api/coletar", async (req, res) => {
     try {
       const payload = req.body;
