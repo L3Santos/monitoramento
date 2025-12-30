@@ -4,13 +4,16 @@ import requests
 import time
 import subprocess
 import json
+import platform
+import sys
 from datetime import datetime
 
 # Configurações
-API_URL = "http://localhost:5000/api/coletar"
-API_URL_REMOTE = "https://ec7b3897-25db-4d7f-8229-c27435ea5538-00-3k3aqjcyjqqr2.kirk.replit.dev/api/coletar"
+URL_API = "http://localhost:5000/api/coletar"
+URL_API_REMOTA = "https://ec7b3897-25db-4d7f-8229-c27435ea5538-00-3k3aqjcyjqqr2.kirk.replit.dev/api/coletar"
 INTERVALO = 2  # segundos - verifica a cada 2 segundos
 SESSOES_RASTREADAS = {}  # Rastreia PIDs de AnyDesk já registrados
+SISTEMA_OPERACIONAL = platform.system()
 
 def eh_ip_interno(ip):
     """Verifica se o IP é interno/privado"""
@@ -20,13 +23,16 @@ def eh_ip_interno(ip):
     if len(partes) != 4:
         return False
     # Faixas de IP privado: 10.x.x.x, 172.16.x.x-172.31.x.x, 192.168.x.x
-    p1, p2 = int(partes[0]), int(partes[1])
-    if p1 == 10:
-        return True
-    if p1 == 172 and 16 <= p2 <= 31:
-        return True
-    if p1 == 192 and p2 == 168:
-        return True
+    try:
+        p1, p2 = int(partes[0]), int(partes[1])
+        if p1 == 10:
+            return True
+        if p1 == 172 and 16 <= p2 <= 31:
+            return True
+        if p1 == 192 and p2 == 168:
+            return True
+    except ValueError:
+        pass
     return False
 
 def obter_sessoes_anydesk():
@@ -45,8 +51,8 @@ def obter_sessoes_anydesk():
                     # Busca conexões ESTABLISHED de TODOS os processos
                     for conn in psutil.net_connections(kind='inet'):
                         try:
-                            # Filtro aprimorado: ignorar porta 443 (servidores de controle/heartbeat do AnyDesk)
-                            if conn.status == 'ESTABLISHED' and conn.pid == pid and conn.raddr.port != 443:
+                            # Verifica se raddr existe antes de acessar .port
+                            if conn.status == 'ESTABLISHED' and conn.pid == pid and conn.raddr and conn.raddr.port != 443:
                                 ip_remoto = conn.raddr.ip if conn.raddr else "0.0.0.0"
                                 # Filtra para pegar apenas IPs externos e não-administrativos
                                 if not eh_ip_interno(ip_remoto):
@@ -59,18 +65,17 @@ def obter_sessoes_anydesk():
                                         "usuario": usuario,
                                         "nome_computador": "localhost"
                                     })
-                                    # Não paramos no primeiro break para capturar múltiplas conexões se houver
-                        except (psutil.NoSuchProcess, psutil.AccessDenied, AttributeError):
+                        except (psutil.NoSuchProcess, psutil.AccessDenied, AttributeError, TypeError):
                             continue
             except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
                 continue
-    except Exception as e:
+    except Exception:
         pass  # Silencioso - sem logs
     
     return sessoes
 
-def obter_servicos():
-    """Obtém status de serviços"""
+def obter_servicos_linux():
+    """Obtém status de serviços no Linux"""
     servicos_alvo = ['anydesk', 'ssh', 'docker', 'nginx', 'apache2', 'mysql', 'postgresql']
     resultado = []
     for nome in servicos_alvo:
@@ -89,6 +94,39 @@ def obter_servicos():
             continue
     return resultado
 
+def obter_servicos_windows():
+    """Obtém status de serviços no Windows"""
+    servicos_alvo = ['AnyDesk', 'sshd', 'Docker', 'nginx', 'Apache2', 'MySQL80', 'PostgreSQL']
+    resultado = []
+    for nome in servicos_alvo:
+        try:
+            # Usando Get-Service do PowerShell
+            output = subprocess.run(['powershell', '-Command', f'Get-Service -Name "{nome}" -ErrorAction SilentlyContinue | Select-Object -Property Name, Status | Format-List'], 
+                                  capture_output=True, text=True, timeout=2)
+            if 'Running' in output.stdout:
+                # Tentar obter o PID
+                pid_output = subprocess.run(['powershell', '-Command', f'(Get-Process -Name "{nome.lower()}" -ErrorAction SilentlyContinue).Id'], 
+                                          capture_output=True, text=True, timeout=2)
+                try:
+                    pid = int(pid_output.stdout.strip()) if pid_output.stdout.strip() else None
+                except:
+                    pid = None
+                resultado.append({"nome": nome, "status": "executando", "pid": pid})
+            else:
+                resultado.append({"nome": nome, "status": "parado", "pid": None})
+        except:
+            continue
+    return resultado
+
+def obter_servicos():
+    """Obtém status de serviços (multiplataforma)"""
+    if SISTEMA_OPERACIONAL == "Linux":
+        return obter_servicos_linux()
+    elif SISTEMA_OPERACIONAL == "Windows":
+        return obter_servicos_windows()
+    else:
+        return []
+
 def obter_conexoes():
     """Obtém conexões de rede ativas"""
     conexoes = []
@@ -100,9 +138,11 @@ def obter_conexoes():
                     nome_proc = p.name()
                 except:
                     nome_proc = "Desconhecido"
+                porta_local = conn.laddr.port if conn.laddr else 0
+                ip_remoto = conn.raddr.ip if conn.raddr else "0.0.0.0"
                 conexoes.append({
-                    "porta_local": conn.laddr.port,
-                    "ip_remoto": conn.raddr.ip if conn.raddr else "0.0.0.0",
+                    "porta_local": porta_local,
+                    "ip_remoto": ip_remoto,
                     "estado": conn.status,
                     "processo": nome_proc
                 })
@@ -114,7 +154,7 @@ def obter_processos():
     """Obtém 10 processos com maior uso de CPU"""
     processos = []
     try:
-        for proc in psutil.process_iter(['pid', 'name', 'username', 'cpu_percent', 'memory_percent'], attrs=['pid', 'name', 'username', 'cpu_percent', 'memory_percent']):
+        for proc in psutil.process_iter(['pid', 'name', 'username', 'cpu_percent', 'memory_percent']):
             try:
                 info = proc.info
                 processos.append({
@@ -132,7 +172,7 @@ def obter_processos():
 
 def coletar_e_enviar():
     """Loop silencioso de coleta e envio de dados"""
-    target_url = API_URL
+    url_alvo = URL_API
     ultima_impressao = 0
     
     while True:
@@ -150,7 +190,8 @@ def coletar_e_enviar():
                 "anydesk": {"ativo": len(sessoes_any) > 0, "sessoes": sessoes_any},
                 "processos": obter_processos(),
                 "servicos": obter_servicos(),
-                "rede": obter_conexoes()
+                "rede": obter_conexoes(),
+                "sistema_operacional": SISTEMA_OPERACIONAL
             }
             
             # Imprime apenas se houver sessão AnyDesk ativa
@@ -160,20 +201,20 @@ def coletar_e_enviar():
                 ultima_impressao = agora
             
             try:
-                response = requests.post(target_url, json=payload, timeout=3)
+                response = requests.post(url_alvo, json=payload, timeout=3)
                 if response.status_code != 200:
-                    target_url = API_URL_REMOTE if target_url == API_URL else API_URL
+                    url_alvo = URL_API_REMOTA if url_alvo == URL_API else URL_API
             except:
-                target_url = API_URL_REMOTE if target_url == API_URL else API_URL
+                url_alvo = URL_API_REMOTA if url_alvo == URL_API else URL_API
                 try:
-                    requests.post(target_url, json=payload, timeout=3)
+                    requests.post(url_alvo, json=payload, timeout=3)
                 except:
                     pass
-        except Exception as e:
+        except Exception:
             pass
         
         time.sleep(INTERVALO)
 
 if __name__ == "__main__":
-    print(f"[{datetime.now().strftime('%H:%M:%S')}] Sistema de Monitoramento iniciado...")
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] Sistema de Monitoramento iniciado em {SISTEMA_OPERACIONAL}...")
     coletar_e_enviar()
