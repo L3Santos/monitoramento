@@ -45,13 +45,18 @@ if not exist "node_modules" (
     echo [2/3] Dependencias ja instaladas.
 )
 
-REM 4. Iniciar Coletor em segundo plano
+REM 4. Instalar pip e dependências Python
 python --version >nul 2>&1
 if errorlevel 1 (
     echo [AVISO] Python nao encontrado. O monitoramento nao funcionara sem o Python.
     echo Instale em: https://www.python.org/downloads/
 ) else (
     echo [INFO] Verificando requisitos do Python...
+    python -m pip --version >nul 2>&1
+    if errorlevel 1 (
+        echo [AVISO] pip nao encontrado. Instalando pip...
+        python -m ensurepip --upgrade --quiet
+    )
     python -m pip install psutil requests --user --quiet >nul 2>&1
     echo [INFO] Iniciando coletor de dados...
     start "" python coletor.py

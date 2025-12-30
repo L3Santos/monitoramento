@@ -87,10 +87,24 @@ else
     echo "[OK] Dependências Node.js já existem"
 fi
 
-# 5. Instalar dependências Python
+# 5. Instalar pip e dependências Python
 echo "[5/5] Instalando dependências Python..."
+
+# Instalar pip se não tiver
+if ! command -v pip3 &> /dev/null; then
+    echo "[AVISO] pip3 não encontrado. Instalando..."
+    if [ "$OS" = "ubuntu" ] || [ "$OS" = "debian" ]; then
+        sudo apt-get install -y -qq python3-pip
+    elif [ "$OS" = "fedora" ] || [ "$OS" = "rhel" ]; then
+        sudo dnf install -y python3-pip
+    elif [ "$OS" = "arch" ]; then
+        sudo pacman -S --noconfirm python-pip
+    fi
+fi
+
+# Instalar psutil e requests
 if ! python3 -c "import psutil, requests" 2>/dev/null; then
-    python3 -m pip install psutil requests --user --quiet
+    pip3 install psutil requests --user --quiet 2>/dev/null || python3 -m pip install psutil requests --user --quiet
     echo "[OK] Dependências Python instaladas"
 else
     echo "[OK] Dependências Python já existem"
