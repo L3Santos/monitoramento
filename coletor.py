@@ -15,62 +15,62 @@ INTERVALO = 2  # segundos - verifica a cada 2 segundos
 SESSOES_RASTREADAS = {}  # Rastreia PIDs de AnyDesk já registrados
 SISTEMA_OPERACIONAL = platform.system()
 
-def eh_ip_interno(ip):
-    """Verifica se o IP é interno/privado"""
-    if ip == "127.0.0.1" or ip == "0.0.0.0" or ip == "::1":
-        return True
-    partes = ip.split('.')
-    if len(partes) != 4:
-        return False
-    # Faixas de IP privado: 10.x.x.x, 172.16.x.x-172.31.x.x, 192.168.x.x
-    try:
-        p1, p2 = int(partes[0]), int(partes[1])
-        if p1 == 10:
-            return True
-        if p1 == 172 and 16 <= p2 <= 31:
-            return True
-        if p1 == 192 and p2 == 168:
-            return True
-    except ValueError:
-        pass
-    return False
-
 def obter_sessoes_anydesk():
-    """Detecta sessões AnyDesk ativas silenciosamente"""
+    """Detecta AnyDesk - captura QUALQUER máquina que se conecta (local ou externa)"""
     sessoes = []
+    processadores_anydesk_pids = []
+    
     try:
-        # Procura por todos os processos AnyDesk em execução
+        # Primeiro: procurar processos AnyDesk ativos
         for proc in psutil.process_iter(['pid', 'name', 'username']):
             try:
                 nome = proc.info['name'].lower()
-                # Detecta AnyDesk em várias formas: anydesk, anydesk.exe, anydesk64, etc
-                if 'anydesk' in nome:
+                # Detecta AnyDesk em várias formas
+                if 'anydesk' in nome or 'ad_svc' in nome:
                     pid = proc.info['pid']
-                    usuario = proc.info['username'] or 'desconhecido'
-                    
-                    # Busca conexões ESTABLISHED de TODOS os processos
-                    for conn in psutil.net_connections(kind='inet'):
-                        try:
-                            # Verifica se raddr existe antes de acessar .port
-                            if conn.status == 'ESTABLISHED' and conn.pid == pid and conn.raddr and conn.raddr.port != 443:
-                                ip_remoto = conn.raddr.ip if conn.raddr else "0.0.0.0"
-                                # Filtra para pegar apenas IPs externos e não-administrativos
-                                if not eh_ip_interno(ip_remoto):
-                                    sessoes.append({
-                                        "pid": pid,
-                                        "ip_remoto": ip_remoto,
-                                        "porta": conn.raddr.port if conn.raddr else 0,
-                                        "horario_inicio": datetime.now().isoformat(),
-                                        "status": "ativo",
-                                        "usuario": usuario,
-                                        "nome_computador": "localhost"
-                                    })
-                        except (psutil.NoSuchProcess, psutil.AccessDenied, AttributeError, TypeError):
-                            continue
-            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                    processadores_anydesk_pids.append(pid)
+            except (psutil.NoSuchProcess, psutil.AccessDenied):
                 continue
-    except Exception:
-        pass  # Silencioso - sem logs
+        
+        # Segundo: procurar conexões do AnyDesk
+        try:
+            todas_conexoes = psutil.net_connections(kind='inet')
+        except (psutil.AccessDenied, OSError):
+            todas_conexoes = []
+        
+        for conn in todas_conexoes:
+            try:
+                # Se a conexão pertence a um processo AnyDesk
+                if conn.pid and conn.pid in processadores_anydesk_pids:
+                    # QUALQUER conexão ESTABLISHED com raddr válido
+                    if conn.status == 'ESTABLISHED' and conn.raddr:
+                        ip_remoto = conn.raddr.ip
+                        porta_remota = conn.raddr.port
+                        
+                        # Rejeita apenas 0.0.0.0 (inválido)
+                        if ip_remoto != "0.0.0.0":
+                            usuario = "desconhecido"
+                            try:
+                                p = psutil.Process(conn.pid)
+                                usuario = p.username() or "desconhecido"
+                            except:
+                                pass
+                            
+                            sessoes.append({
+                                "pid": conn.pid,
+                                "ip_remoto": ip_remoto,
+                                "porta": porta_remota,
+                                "horario_inicio": datetime.now().isoformat(),
+                                "status": "ativo",
+                                "usuario": usuario,
+                                "nome_computador": "localhost"
+                            })
+                            print(f"[{datetime.now().strftime('%H:%M:%S')}] ANYDESK DETECTADO: {ip_remoto}:{porta_remota}")
+            except (AttributeError, TypeError, psutil.NoSuchProcess):
+                continue
+    
+    except Exception as e:
+        print(f"[ERRO] Falha ao detectar AnyDesk: {e}")
     
     return sessoes
 
@@ -194,12 +194,6 @@ def coletar_e_enviar():
                 "sistema_operacional": SISTEMA_OPERACIONAL
             }
             
-            # Imprime apenas se houver sessão AnyDesk ativa
-            agora = time.time()
-            if len(sessoes_any) > 0 and (agora - ultima_impressao) > 5:
-                print(f"[{datetime.now().strftime('%H:%M:%S')}] ANYDESK DETECTADO: {len(sessoes_any)} sessão(ões)")
-                ultima_impressao = agora
-            
             try:
                 response = requests.post(url_alvo, json=payload, timeout=3)
                 if response.status_code != 200:
@@ -210,11 +204,12 @@ def coletar_e_enviar():
                     requests.post(url_alvo, json=payload, timeout=3)
                 except:
                     pass
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"[ERRO] Erro na coleta: {e}")
         
         time.sleep(INTERVALO)
 
 if __name__ == "__main__":
     print(f"[{datetime.now().strftime('%H:%M:%S')}] Sistema de Monitoramento iniciado em {SISTEMA_OPERACIONAL}...")
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] Monitorando AnyDesk e recursos do sistema...")
     coletar_e_enviar()

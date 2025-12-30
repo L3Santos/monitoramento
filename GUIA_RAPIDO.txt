@@ -1,0 +1,93 @@
+╔════════════════════════════════════════════════════════════════════╗
+║         MÁQUINA CONCILIAÇÃO - GUIA RÁPIDO DE USO                  ║
+╚════════════════════════════════════════════════════════════════════╝
+
+✅ TUDO PRONTO PARA USAR!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PASSO 1: No seu PC Linux/Ubuntu
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+$ chmod +x rodar.sh
+$ ./rodar.sh
+
+O script vai:
+ ✓ Verificar/instalar Node.js (se faltar)
+ ✓ Verificar/instalar Python3 (se faltar)  
+ ✓ Instalar dependências npm
+ ✓ Instalar dependências Python (psutil, requests)
+ ✓ Iniciar coletor em segundo plano
+ ✓ Abrir painel em http://localhost:5000
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PASSO 2: No seu PC Windows
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+> rodar.bat
+
+Mesmo processo automático (install + run)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PASSO 3: Testar Detecção de AnyDesk
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. O AnyDesk já está aberto? 
+   → Painel mostra: "Status: aguardando_conexao"
+
+2. Agora faça uma conexão remota
+   → Painel mostra: "Status: ativo" com IP e porta
+
+3. Verifique os logs (enquanto rodar.sh estiver aberto):
+   [HH:MM:SS] AnyDesk DETECTADO: Processo rodando...
+   [HH:MM:SS] AnyDesk CONECTADO: xxx.xxx.xxx.xxx:porta
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PASSO 4: Visualizar Painel
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+http://localhost:5000
+
+Menus disponíveis:
+ • Visão Geral: CPU, Memória, AnyDesk, Serviços
+ • AnyDesk: Detalhes de sessões ativas
+ • Serviços: Status de serviços do sistema
+ • Processos: Top 10 processos por CPU
+ • Rede: Conexões ativas
+ • Histórico: Histórico de dados
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+O QUE MUDOU?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ Antes:
+  - Coleta não funcionava em outro PC
+  - Detectava AnyDesk só com IPs externos
+  - pip3 não era instalado automaticamente
+
+✅ Agora:
+  - Funciona em Linux, Ubuntu E Windows
+  - Detecta AnyDesk (rodando OU conectado)
+  - Scripts com instalação 100% automática
+  - Tudo em Português
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ARQUIVOS IMPORTANTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+coletor.py         - Coleta de dados (Linux + Windows)
+rodar.sh           - Script automático Linux
+rodar.bat          - Script automático Windows
+replit.md          - Documentação completa
+TESTE_ANYDESK.md   - Guia de teste detalhado
+GUIA_RAPIDO.txt    - Este arquivo!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SUPORTE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Se AnyDesk não aparecer:
+1. Verifique se AnyDesk está rodando: ps aux | grep anydesk
+2. Verifique os logs: tail -f coletor.log (enquanto rodar.sh roda)
+3. Leia: TESTE_ANYDESK.md para debug avançado
+
+Pronto para usar! Boa sorte! 🚀
