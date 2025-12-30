@@ -93,7 +93,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   });
 
   app.get(api.status.path, (req, res) => res.json(snapshotAtual));
-  
+
   app.get("/api/anydesk/historico", async (req, res) => {
     res.json(await storage.obterSessoesAnydesk());
   });
@@ -104,7 +104,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   });
 
   app.get("/api/anydesk/ativos", (req, res) => {
-    res.json(logAnydesk.obterSessoesAtivas());
+    res.json(snapshotAtual.anydesk.sessoesAtuais);
   });
 
   app.get("/api/anydesk/stats", (req, res) => {
