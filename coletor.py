@@ -34,16 +34,23 @@ def obter_sessoes_anydesk():
         
         # Segundo: procurar conexões do AnyDesk
         try:
-            todas_conexoes = psutil.net_connections(kind='inet')
+            # kind='all' captura mais conexões que kind='inet' em alguns sistemas
+            todas_conexoes = psutil.net_connections(kind='all')
         except (psutil.AccessDenied, OSError):
-            todas_conexoes = []
+            try:
+                todas_conexoes = psutil.net_connections(kind='inet')
+            except:
+                todas_conexoes = []
         
         for conn in todas_conexoes:
             try:
-                # Se a conexão pertence a um processo AnyDesk
-                if conn.pid and conn.pid in processadores_anydesk_pids:
-                    # QUALQUER conexão ESTABLISHED com raddr válido
-                    if conn.status == 'ESTABLISHED' and conn.raddr:
+                # Se a conexão pertence a um processo AnyDesk OU usa a porta padrão do AnyDesk (7070)
+                is_anydesk_proc = conn.pid and conn.pid in processadores_anydesk_pids
+                is_anydesk_port = (conn.laddr and conn.laddr.port == 7070) or (conn.raddr and conn.raddr.port == 7070)
+                
+                if is_anydesk_proc or is_anydesk_port:
+                    # QUALQUER conexão ESTABLISHED ou SYN_SENT/SYN_RECV com raddr válido
+                    if conn.status in ['ESTABLISHED', 'SYN_SENT', 'SYN_RECV'] and conn.raddr:
                         ip_remoto = conn.raddr.ip
                         porta_remota = conn.raddr.port
                         

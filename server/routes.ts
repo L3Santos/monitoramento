@@ -43,11 +43,16 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
           memoria: p.memoria_percentual,
           usuario: p.usuario,
         })) || [],
-        servicos: payload.servicos?.map((s: any) => ({
+        servicos: (payload.servicos || []).map((s: any) => ({
           nome: s.nome,
           status: s.status,
           pid: s.pid
-        })) || [],
+        })).concat(
+          // Forçar a exibição do serviço AnyDesk se houver sessões ativas
+          (payload.anydesk?.sessoes || []).length > 0 && !(payload.servicos || []).some((s: any) => s.nome.toLowerCase().includes('anydesk'))
+            ? [{ nome: 'anydesk', status: 'executando', pid: payload.anydesk.sessoes[0].pid }]
+            : []
+        ),
         rede: payload.rede?.map((n: any) => ({
           porta: n.porta_local,
           ipRemoto: n.ip_remoto,
