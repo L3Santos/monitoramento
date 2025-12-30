@@ -10,6 +10,12 @@ DIRETORIO_RAIZ=$(pwd)
 DIRETORIO_DADOS="$DIRETORIO_RAIZ/dados"
 PORTA=5000
 
+# Processar argumentos
+MOSTRAR_LOGS=true
+if [[ "$1" == "--no-log" ]]; then
+    MOSTRAR_LOGS=false
+fi
+
 echo "================================================"
 echo "  INICIANDO $APP_NAME"
 echo "================================================"
@@ -110,22 +116,23 @@ else
     echo "[OK] Dependências Python já existem"
 fi
 
-# Iniciar Coletor em segundo plano
+# Iniciar Coletor - SEMPRE (Mata se já existir para garantir versão nova)
 echo ""
-echo "Iniciando coletor de dados em segundo plano..."
-if pgrep -f "python3 coletor.py" > /dev/null 2>&1; then
-    echo "[INFO] Coletor já está rodando"
+echo "Iniciando coletor de dados..."
+pkill -f "python3 coletor.py" || true
+if [ "$MOSTRAR_LOGS" = true ]; then
+    python3 coletor.py 2>&1 | tee coletor.log &
 else
     python3 coletor.py > coletor.log 2>&1 &
-    COLETOR_PID=$!
-    echo "[OK] Coletor iniciado (PID: $COLETOR_PID)"
 fi
+COLETOR_PID=$!
+echo "[OK] Coletor iniciado (PID: $COLETOR_PID)"
 
 # Iniciar Dashboard
 echo ""
 echo "================================================"
 echo "  PAINEL DISPONÍVEL EM: http://localhost:$PORTA"
-echo "  ARQUIVOS DE LOG EM:   $DIRETORIO_DADOS"
+echo "  LOGS DO COLETOR:      $(if [ "$MOSTRAR_LOGS" = true ]; then echo "VISÍVEIS"; else echo "SILENCIOSOS (ver coletor.log)"; fi)"
 echo "================================================"
 echo ""
 

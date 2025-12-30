@@ -8,6 +8,12 @@ set DIRETORIO_RAIZ=%cd%
 set DIRETORIO_DADOS=%DIRETORIO_RAIZ%\dados
 set PORTA=5000
 
+REM Processar argumentos
+set MOSTRAR_LOGS=true
+if "%~1"=="--no-log" (
+    set MOSTRAR_LOGS=false
+)
+
 echo.
 echo ================================================
 echo   INICIANDO %APP_NAME%
@@ -45,7 +51,7 @@ if not exist "node_modules" (
     echo [2/3] Dependencias ja instaladas.
 )
 
-REM 4. Instalar pip e dependências Python
+REM 4. Instalar pip e dependências Python e Iniciar Coletor
 python --version >nul 2>&1
 if errorlevel 1 (
     echo [AVISO] Python nao encontrado. O monitoramento nao funcionara sem o Python.
@@ -58,10 +64,17 @@ if errorlevel 1 (
         python -m ensurepip --upgrade --quiet
     )
     python -m pip install psutil requests --user --quiet >nul 2>&1
+    
     echo [INFO] Iniciando coletor de dados...
-    start "" python coletor.py
-    echo [OK] Coletor rodando em segundo plano
-    echo [DICA] Se os dados nao aparecerem, verifique o console
+    REM Mata instâncias anteriores para garantir subida limpa
+    taskkill /F /IM python.exe /FI "WINDOWTITLE eq ColetorAnyDesk" >nul 2>&1
+    
+    if "%MOSTRAR_LOGS%"=="true" (
+        start "ColetorAnyDesk" python coletor.py
+    ) else (
+        start /B "ColetorAnyDesk" python coletor.py > coletor.log 2>&1
+    )
+    echo [OK] Coletor iniciado.
 )
 
 REM 5. Iniciar Dashboard
@@ -69,7 +82,7 @@ echo [3/3] Iniciando Servidor Dashboard...
 echo.
 echo ------------------------------------------------
 echo PAINEL DISPONIVEL EM: http://localhost:%PORTA%
-echo ARQUIVOS DE LOG EM:   %DIRETORIO_DADOS%
+echo LOGS DO COLETOR:      %MOSTRAR_LOGS% (se false, ver coletor.log)
 echo ------------------------------------------------
 echo.
 

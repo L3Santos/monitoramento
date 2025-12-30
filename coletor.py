@@ -10,7 +10,7 @@ from datetime import datetime
 
 # Configurações
 URL_API = "http://localhost:5000/api/coletar"
-URL_API_REMOTA = "https://ec7b3897-25db-4d7f-8229-c27435ea5538-00-3k3aqjcyjqqr2.kirk.replit.dev/api/coletar"
+URL_API_REMOTA = "https://c5795771-9cdc-4c7e-81b1-2e7126b53ef5-00-19jjgqjlkimr5.kirk.replit.dev/api/coletar"
 INTERVALO = 2  # segundos - verifica a cada 2 segundos
 SESSOES_RASTREADAS = {}  # Rastreia PIDs de AnyDesk já registrados
 SISTEMA_OPERACIONAL = platform.system()
