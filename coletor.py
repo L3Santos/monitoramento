@@ -49,30 +49,33 @@ def obter_sessoes_anydesk():
                 is_anydesk_port = (conn.laddr and conn.laddr.port == 7070) or (conn.raddr and conn.raddr.port == 7070)
                 
                 if is_anydesk_proc or is_anydesk_port:
-                    # QUALQUER conexão ESTABLISHED ou SYN_SENT/SYN_RECV com raddr válido
-                    if conn.status in ['ESTABLISHED', 'SYN_SENT', 'SYN_RECV'] and conn.raddr:
+                    # QUALQUER conexão com raddr válido (remoto)
+                    # Expandindo para capturar mais estados que podem indicar atividade
+                    if conn.raddr and conn.raddr.ip != "0.0.0.0":
                         ip_remoto = conn.raddr.ip
                         porta_remota = conn.raddr.port
                         
-                        # Rejeita apenas 0.0.0.0 (inválido)
-                        if ip_remoto != "0.0.0.0":
-                            usuario = "desconhecido"
-                            try:
-                                p = psutil.Process(conn.pid)
-                                usuario = p.username() or "desconhecido"
-                            except:
-                                pass
-                            
-                            sessoes.append({
-                                "pid": conn.pid,
-                                "ip_remoto": ip_remoto,
-                                "porta": porta_remota,
-                                "horario_inicio": datetime.now().isoformat(),
-                                "status": "ativo",
-                                "usuario": usuario,
-                                "nome_computador": "localhost"
-                            })
-                            print(f"[{datetime.now().strftime('%H:%M:%S')}] ANYDESK DETECTADO: {ip_remoto}:{porta_remota}")
+                        # Filtro de IP: Ignorar localhost se houver conexões externas
+                        if ip_remoto in ["127.0.0.1", "::1"] and any(s["ip_remoto"] not in ["127.0.0.1", "::1"] for s in sessoes):
+                            continue
+
+                        usuario = "desconhecido"
+                        try:
+                            p = psutil.Process(conn.pid)
+                            usuario = p.username() or "desconhecido"
+                        except:
+                            pass
+                        
+                        sessoes.append({
+                            "pid": conn.pid,
+                            "ip_remoto": ip_remoto,
+                            "porta": porta_remota,
+                            "horario_inicio": datetime.now().isoformat(),
+                            "status": "ativo",
+                            "usuario": usuario,
+                            "nome_computador": "localhost"
+                        })
+                        print(f"[{datetime.now().strftime('%H:%M:%S')}] ANYDESK DETECTADO: {ip_remoto}:{porta_remota} (Estado: {conn.status})")
             except (AttributeError, TypeError, psutil.NoSuchProcess):
                 continue
     

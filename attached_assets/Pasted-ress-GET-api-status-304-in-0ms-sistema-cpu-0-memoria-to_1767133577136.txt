@@ -1,0 +1,18 @@
+ress] GET /api/status 304 in 0ms :: {"sistema":{"cpu":0,"memoria":{"total":"0","usada":"0","percentual":0}},"anydesk":{"ativo":false,"sessoesAtuais":[]},"principaisProcessos":[],"servicos":[],"rede":[],"ultimaAtualizacao":"2025-12-30T22:24:04.279Z"}
+7:24:42 PM [express] GET /api/anydesk/log-completo 304 in 0ms :: []
+7:24:42 PM [express] GET /api/status 304 in 0ms :: {"sistema":{"cpu":0,"memoria":{"total":"0","usada":"0","percentual":0}},"anydesk":{"ativo":false,"sessoesAtuais":[]},"principaisProcessos":[],"servicos":[],"rede":[],"ultimaAtualizacao":"2025-12-30T22:24:04.279Z"}
+7:24:45 PM [express] GET /api/status 304 in 0ms :: {"sistema":{"cpu":0,"memoria":{"total":"0","usada":"0","percentual":0}},"anydesk":{"ativo":false,"sessoesAtuais":[]},"principaisProcessos":[],"servicos":[],"rede":[],"ultimaAtualizacao":"2025-12-30T22:24:04.279Z"}
+7:24:47 PM [express] GET /api/anydesk/stats 304 in 0ms :: {"totalRegistros":0,"sessoesAtuais":0,"totalConectados":0,"totalDesconectados":0,"ipsUnicos":0}
+7:24:47 PM [express] GET /api/anydesk/log-completo 304 in 1ms :: []
+7:24:48 PM [express] GET /api/status 304 in 0ms :: {"sistema":{"cpu":0,"memoria":{"total":"0","usada":"0","percentual":0}},"anydesk":{"ativo":false,"sessoesAtuais":[]},"principaisProcessos":[],"servicos":[],"rede":[],"ultimaAtualizacao":"2025-12-30T22:24:04.279Z"}
+7:24:51 PM [express] GET /api/status 304 in 0ms :: {"sistema":{"cpu":0,"memoria":{"total":"0","usada":"0","percentual":0}},"anydesk":{"ativo":false,"sessoesAtuais":[]},"principaisProcessos":[],"servicos":[],"rede":[],"ultimaAtualizacao":"2025-12-30T22:24:04.279Z"}
+7:24:52 PM [express] GET /api/anydesk/log-completo 304 in 0ms :: []
+7:24:54 PM [express] GET /api/status 304 in 0ms :: {"sistema":{"cpu":0,"memoria":{"total":"0","usada":"0","percentual":0}},"anydesk":{"ativo":false,"sessoesAtuais":[]},"principaisProcessos":[],"servicos":[],"rede":[],"ultimaAtualizacao":"2025-12-30T22:24:04.279Z"}
+7:24:57 PM [express] GET /api/anydesk/stats 304 in 0ms :: {"totalRegistros":0,"sessoesAtuais":0,"totalConectados":0,"totalDesconectados":0,"ipsUnicos":0}
+7:24:57 PM [express] GET /api/anydesk/log-completo 304 in 0ms :: []
+7:24:57 PM [express] GET /api/status 304 in 0ms :: {"sistema":{"cpu":0,"memoria":{"total":"0","usada":"0","percentual":0}},"anydesk":{"ativo":false,"sessoesAtuais":[]},"principaisProcessos":[],"servicos":[],"rede":[],"ultimaAtualizacao":"2025-12-30T22:24:04.279Z"}
+7:25:00 PM [express] GET /api/status 304 in 0ms :: {"sistema":{"cpu":0,"memoria":{"total":"0","usada":"0","percentual":0}},"anydesk":{"ativo":false,"sessoesAtuais":[]},"principaisProcessos":[],"servicos":[],"rede":[],"ultimaAtualizacao":"2025-12-30T22:24:04.279Z"}
+7:25:02 PM [express] GET /api/anydesk/log-completo 304 in 0ms :: []
+7:25:03 PM [express] GET /api/status 304 in 1ms :: {"sistema":{"cpu":0,"memoria":{"total":"0","usada":"0","percentual":0}},"anydesk":{"ativo":false,"sessoesAtuais":[]},"principaisProcessos":[],"servicos":[],"rede":[],"ultimaAtualizacao":"2025-12-30T22:24:04.279Z"}
+7:25:06 PM [express] GET /api/status 304 in 0ms :: {"sistema":{"cpu":0,"memoria":{"total":"0","usada":"0","percentual":0}},"anydesk":{"ativo":false,"sessoesAtuais":[]},"principaisProcessos":[],"servicos":[],"rede":[],"ultimaAtualizacao":"2025-12-30T22:24:04.279Z"}
+7:25:07 PM [express] GET /api/anydesk/stats 304 in 1ms :: {"totalRegistros":0,"sessoesAtuais":0,"totalConectados":0,"tot

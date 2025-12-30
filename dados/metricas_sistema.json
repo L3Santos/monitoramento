@@ -1,0 +1,482 @@
+[
+  {
+    "usoCpu": 37,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.6GB",
+    "memoriaPercentual": 41,
+    "id": 1,
+    "horario": "2025-12-30T22:24:05.065Z"
+  },
+  {
+    "usoCpu": 33,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.1GB",
+    "memoriaPercentual": 43,
+    "id": 2,
+    "horario": "2025-12-30T22:24:08.550Z"
+  },
+  {
+    "usoCpu": 15,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.2GB",
+    "memoriaPercentual": 44,
+    "id": 3,
+    "horario": "2025-12-30T22:24:12.011Z"
+  },
+  {
+    "usoCpu": 17,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.2GB",
+    "memoriaPercentual": 44,
+    "id": 4,
+    "horario": "2025-12-30T22:24:15.529Z"
+  },
+  {
+    "usoCpu": 12,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.2GB",
+    "memoriaPercentual": 44,
+    "id": 5,
+    "horario": "2025-12-30T22:24:18.994Z"
+  },
+  {
+    "usoCpu": 17,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.2GB",
+    "memoriaPercentual": 44,
+    "id": 6,
+    "horario": "2025-12-30T22:24:22.465Z"
+  },
+  {
+    "usoCpu": 14,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.2GB",
+    "memoriaPercentual": 44,
+    "id": 7,
+    "horario": "2025-12-30T22:24:25.892Z"
+  },
+  {
+    "usoCpu": 11,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.3GB",
+    "memoriaPercentual": 44,
+    "id": 8,
+    "horario": "2025-12-30T22:24:29.316Z"
+  },
+  {
+    "usoCpu": 18,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.3GB",
+    "memoriaPercentual": 44,
+    "id": 9,
+    "horario": "2025-12-30T22:24:32.738Z"
+  },
+  {
+    "usoCpu": 16,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.3GB",
+    "memoriaPercentual": 44,
+    "id": 10,
+    "horario": "2025-12-30T22:24:36.163Z"
+  },
+  {
+    "usoCpu": 13,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.1GB",
+    "memoriaPercentual": 43,
+    "id": 11,
+    "horario": "2025-12-30T22:24:39.582Z"
+  },
+  {
+    "usoCpu": 17,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.1GB",
+    "memoriaPercentual": 43,
+    "id": 12,
+    "horario": "2025-12-30T22:24:43.003Z"
+  },
+  {
+    "usoCpu": 17,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.1GB",
+    "memoriaPercentual": 43,
+    "id": 13,
+    "horario": "2025-12-30T22:24:46.435Z"
+  },
+  {
+    "usoCpu": 16,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.1GB",
+    "memoriaPercentual": 43,
+    "id": 14,
+    "horario": "2025-12-30T22:24:49.854Z"
+  },
+  {
+    "usoCpu": 14,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.1GB",
+    "memoriaPercentual": 43,
+    "id": 15,
+    "horario": "2025-12-30T22:24:53.274Z"
+  },
+  {
+    "usoCpu": 15,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.1GB",
+    "memoriaPercentual": 43,
+    "id": 16,
+    "horario": "2025-12-30T22:24:56.704Z"
+  },
+  {
+    "usoCpu": 14,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.1GB",
+    "memoriaPercentual": 43,
+    "id": 17,
+    "horario": "2025-12-30T22:25:00.124Z"
+  },
+  {
+    "usoCpu": 17,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.1GB",
+    "memoriaPercentual": 43,
+    "id": 18,
+    "horario": "2025-12-30T22:25:03.549Z"
+  },
+  {
+    "usoCpu": 17,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.1GB",
+    "memoriaPercentual": 43,
+    "id": 19,
+    "horario": "2025-12-30T22:25:07.010Z"
+  },
+  {
+    "usoCpu": 18,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.1GB",
+    "memoriaPercentual": 43,
+    "id": 20,
+    "horario": "2025-12-30T22:25:10.442Z"
+  },
+  {
+    "usoCpu": 13,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.1GB",
+    "memoriaPercentual": 43,
+    "id": 21,
+    "horario": "2025-12-30T22:25:13.869Z"
+  },
+  {
+    "usoCpu": 17,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.1GB",
+    "memoriaPercentual": 43,
+    "id": 22,
+    "horario": "2025-12-30T22:25:17.309Z"
+  },
+  {
+    "usoCpu": 13,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.1GB",
+    "memoriaPercentual": 43,
+    "id": 23,
+    "horario": "2025-12-30T22:25:20.778Z"
+  },
+  {
+    "usoCpu": 16,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.0GB",
+    "memoriaPercentual": 43,
+    "id": 24,
+    "horario": "2025-12-30T22:25:24.197Z"
+  },
+  {
+    "usoCpu": 13,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.1GB",
+    "memoriaPercentual": 43,
+    "id": 25,
+    "horario": "2025-12-30T22:25:27.627Z"
+  },
+  {
+    "usoCpu": 16,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.0GB",
+    "memoriaPercentual": 43,
+    "id": 26,
+    "horario": "2025-12-30T22:25:31.050Z"
+  },
+  {
+    "usoCpu": 17,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.0GB",
+    "memoriaPercentual": 43,
+    "id": 27,
+    "horario": "2025-12-30T22:25:34.501Z"
+  },
+  {
+    "usoCpu": 17,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.1GB",
+    "memoriaPercentual": 43,
+    "id": 28,
+    "horario": "2025-12-30T22:25:37.928Z"
+  },
+  {
+    "usoCpu": 14,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.1GB",
+    "memoriaPercentual": 43,
+    "id": 29,
+    "horario": "2025-12-30T22:25:41.354Z"
+  },
+  {
+    "usoCpu": 16,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.1GB",
+    "memoriaPercentual": 43,
+    "id": 30,
+    "horario": "2025-12-30T22:25:44.800Z"
+  },
+  {
+    "usoCpu": 17,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "10.1GB",
+    "memoriaPercentual": 43,
+    "id": 31,
+    "horario": "2025-12-30T22:25:48.254Z"
+  },
+  {
+    "usoCpu": 17,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 32,
+    "horario": "2025-12-30T22:25:51.686Z"
+  },
+  {
+    "usoCpu": 16,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 33,
+    "horario": "2025-12-30T22:25:55.158Z"
+  },
+  {
+    "usoCpu": 16,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 34,
+    "horario": "2025-12-30T22:26:00.923Z"
+  },
+  {
+    "usoCpu": 13,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 35,
+    "horario": "2025-12-30T22:26:04.922Z"
+  },
+  {
+    "usoCpu": 16,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 36,
+    "horario": "2025-12-30T22:26:08.365Z"
+  },
+  {
+    "usoCpu": 16,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 37,
+    "horario": "2025-12-30T22:26:11.796Z"
+  },
+  {
+    "usoCpu": 17,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 38,
+    "horario": "2025-12-30T22:26:15.215Z"
+  },
+  {
+    "usoCpu": 17,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 39,
+    "horario": "2025-12-30T22:26:18.631Z"
+  },
+  {
+    "usoCpu": 14,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 40,
+    "horario": "2025-12-30T22:26:22.066Z"
+  },
+  {
+    "usoCpu": 16,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 41,
+    "horario": "2025-12-30T22:26:25.497Z"
+  },
+  {
+    "usoCpu": 12,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 42,
+    "horario": "2025-12-30T22:26:28.934Z"
+  },
+  {
+    "usoCpu": 14,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 43,
+    "horario": "2025-12-30T22:26:32.360Z"
+  },
+  {
+    "usoCpu": 16,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 44,
+    "horario": "2025-12-30T22:26:35.788Z"
+  },
+  {
+    "usoCpu": 12,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 45,
+    "horario": "2025-12-30T22:26:39.211Z"
+  },
+  {
+    "usoCpu": 17,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 46,
+    "horario": "2025-12-30T22:26:47.667Z"
+  },
+  {
+    "usoCpu": 12,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 47,
+    "horario": "2025-12-30T22:26:51.119Z"
+  },
+  {
+    "usoCpu": 13,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 48,
+    "horario": "2025-12-30T22:26:54.546Z"
+  },
+  {
+    "usoCpu": 13,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 49,
+    "horario": "2025-12-30T22:26:57.984Z"
+  },
+  {
+    "usoCpu": 16,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 50,
+    "horario": "2025-12-30T22:27:01.430Z"
+  },
+  {
+    "usoCpu": 16,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 51,
+    "horario": "2025-12-30T22:27:06.003Z"
+  },
+  {
+    "usoCpu": 16,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 52,
+    "horario": "2025-12-30T22:27:09.421Z"
+  },
+  {
+    "usoCpu": 16,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 53,
+    "horario": "2025-12-30T22:27:12.853Z"
+  },
+  {
+    "usoCpu": 16,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 54,
+    "horario": "2025-12-30T22:27:16.279Z"
+  },
+  {
+    "usoCpu": 16,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 55,
+    "horario": "2025-12-30T22:27:19.700Z"
+  },
+  {
+    "usoCpu": 16,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 56,
+    "horario": "2025-12-30T22:27:23.175Z"
+  },
+  {
+    "usoCpu": 12,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 57,
+    "horario": "2025-12-30T22:27:26.604Z"
+  },
+  {
+    "usoCpu": 16,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 58,
+    "horario": "2025-12-30T22:27:30.031Z"
+  },
+  {
+    "usoCpu": 13,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 59,
+    "horario": "2025-12-30T22:27:33.440Z"
+  },
+  {
+    "usoCpu": 14,
+    "memoriaTotal": "23.4GB",
+    "memoriaUsada": "9.9GB",
+    "memoriaPercentual": 42,
+    "id": 60,
+    "horario": "2025-12-30T22:27:36.855Z"
+  }
+]
