@@ -5,6 +5,8 @@ import { api } from "@shared/routes";
 import { z } from "zod";
 import { esquemaPayloadColeta } from "@shared/schema";
 import { logAnydesk } from "./armazenamentoAnydesk";
+import { execSync } from "child_process";
+import * as os from "os";
 
 let snapshotAtual = {
   sistema: { cpu: 0, memoria: { total: "0", usada: "0", percentual: 0 } },
@@ -150,6 +152,210 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   });
 
   app.get("/api/metricas/historico", async (req, res) => res.json(await storage.obterUltimasMetricasSistema(20)));
+
+  // Endpoints de Firewall
+  app.get("/api/firewall/status", async (req, res) => {
+    try {
+      const sistemaOp = os.platform();
+      let statusFirewall = false;
+      let portasLiberadas: number[] = [];
+
+      try {
+        if (sistemaOp === "win32") {
+          const output = execSync("netsh advfirewall show allprofiles state", { encoding: "utf-8" });
+          statusFirewall = output.includes("State                                 : on");
+          
+          try {
+            const rulesOutput = execSync("netsh advfirewall firewall show rule name=all dir=in action=allow", { encoding: "utf-8" });
+            const regex = /localport\s*:\s*(\d+)/gi;
+            let match;
+            while ((match = regex.exec(rulesOutput)) !== null) {
+              const porta = parseInt(match[1]);
+              if (porta > 1000 && !portasLiberadas.includes(porta)) {
+                portasLiberadas.push(porta);
+              }
+            }
+          } catch {
+            portasLiberadas = [];
+          }
+        } else {
+          try {
+            const output = execSync("sudo ufw status numbered 2>/dev/null || true", { encoding: "utf-8" });
+            statusFirewall = output.includes("Status: active");
+            
+            try {
+              const statusLines = execSync("sudo ufw status | grep ALLOW || true", { encoding: "utf-8" });
+              const lines = statusLines.split("\n");
+              for (const line of lines) {
+                const match = line.match(/(\d+)\/tcp\s+ALLOW/);
+                if (match) {
+                  const porta = parseInt(match[1]);
+                  if (!portasLiberadas.includes(porta)) {
+                    portasLiberadas.push(porta);
+                  }
+                }
+              }
+            } catch {
+              portasLiberadas = [];
+            }
+          } catch {
+            statusFirewall = false;
+          }
+        }
+      } catch {
+        // Ignorar erros de comando
+      }
+
+      portasLiberadas.sort((a, b) => a - b);
+
+      res.json({
+        ativo: statusFirewall,
+        portasLiberadas: portasLiberadas,
+        sistemaOperacional: sistemaOp === "win32" ? "Windows" : "Linux/Unix",
+        mensagem: "Status do firewall obtido com sucesso"
+      });
+    } catch (err) {
+      console.error("Erro ao obter status do firewall:", err);
+      res.status(500).json({ mensagem: "Erro ao obter status do firewall" });
+    }
+  });
+
+  app.post("/api/firewall/toggle", async (req, res) => {
+    try {
+      const { ativar } = req.body;
+      const sistemaOp = os.platform();
+      let sucesso = false;
+      let mensagem = "";
+
+      try {
+        if (sistemaOp === "win32") {
+          const comando = ativar 
+            ? "netsh advfirewall set allprofiles state on" 
+            : "netsh advfirewall set allprofiles state off";
+          execSync(comando, { stdio: "inherit" });
+          sucesso = true;
+          mensagem = ativar ? "Firewall ATIVADO com sucesso" : "Firewall DESATIVADO com sucesso";
+        } else {
+          const comando = ativar 
+            ? "sudo ufw --force enable" 
+            : "sudo ufw disable";
+          execSync(comando, { stdio: "inherit" });
+          sucesso = true;
+          mensagem = ativar ? "Firewall ATIVADO com sucesso" : "Firewall DESATIVADO com sucesso";
+        }
+      } catch (cmdErr) {
+        mensagem = "Erro ao executar comando de firewall. Pode ser necessário permissões de administrador.";
+      }
+
+      res.json({
+        ativo: ativar,
+        porta50001: false,
+        sistemaOperacional: sistemaOp === "win32" ? "Windows" : "Linux/Unix",
+        mensagem
+      });
+    } catch (err) {
+      console.error("Erro ao alternar firewall:", err);
+      res.status(500).json({ mensagem: "Erro ao alternar firewall" });
+    }
+  });
+
+  app.post("/api/firewall/porta/adicionar", async (req, res) => {
+    try {
+      const { porta } = req.body;
+      
+      if (!porta || porta < 1 || porta > 65535) {
+        return res.status(400).json({ mensagem: "Porta inválida (1-65535)" });
+      }
+
+      const sistemaOp = os.platform();
+      let mensagem = "";
+
+      try {
+        if (sistemaOp === "win32") {
+          const nomeRegra = `Porta${porta}`;
+          const comando = `netsh advfirewall firewall add rule name="${nomeRegra}" dir=in action=allow protocol=tcp localport=${porta}`;
+          execSync(comando, { stdio: "pipe" });
+          mensagem = `Porta ${porta} liberada com sucesso`;
+        } else {
+          const comando = `sudo ufw allow ${porta}/tcp 2>/dev/null || sudo ufw allow ${porta}`;
+          execSync(comando, { stdio: "pipe" });
+          mensagem = `Porta ${porta} liberada com sucesso`;
+        }
+      } catch (cmdErr) {
+        mensagem = "Erro ao executar comando. Verifique permissões ou se a porta já existe.";
+      }
+
+      // Retorna status atualizado
+      const statusRes = await fetch("http://localhost:5000/api/firewall/status");
+      if (statusRes.ok) {
+        const statusData = await statusRes.json();
+        return res.json({ ...statusData, mensagem });
+      }
+
+      res.json({
+        ativo: false,
+        portasLiberadas: [porta],
+        sistemaOperacional: sistemaOp === "win32" ? "Windows" : "Linux/Unix",
+        mensagem
+      });
+    } catch (err) {
+      console.error("Erro ao adicionar porta:", err);
+      res.status(500).json({ mensagem: "Erro ao adicionar porta do firewall" });
+    }
+  });
+
+  app.post("/api/firewall/porta/remover", async (req, res) => {
+    try {
+      const { porta } = req.body;
+      
+      if (!porta || porta < 1 || porta > 65535) {
+        return res.status(400).json({ mensagem: "Porta inválida (1-65535)" });
+      }
+
+      const sistemaOp = os.platform();
+      let mensagem = "";
+
+      try {
+        if (sistemaOp === "win32") {
+          const nomeRegra = `Porta${porta}`;
+          const comando = `netsh advfirewall firewall delete rule name="${nomeRegra}"`;
+          try {
+            execSync(comando, { stdio: "pipe" });
+          } catch {
+            // Regra pode não existir
+          }
+          mensagem = `Porta ${porta} bloqueada com sucesso`;
+        } else {
+          const comando = `sudo ufw delete allow ${porta}/tcp 2>/dev/null || sudo ufw delete allow ${porta}`;
+          try {
+            execSync(comando, { stdio: "pipe" });
+          } catch {
+            // Regra pode não existir
+          }
+          mensagem = `Porta ${porta} bloqueada com sucesso`;
+        }
+      } catch (cmdErr) {
+        mensagem = "Erro ao executar comando de firewall.";
+      }
+
+      // Retorna status atualizado
+      const statusRes = await fetch("http://localhost:5000/api/firewall/status");
+      if (statusRes.ok) {
+        const statusData = await statusRes.json();
+        return res.json({ ...statusData, mensagem });
+      }
+
+      res.json({
+        ativo: false,
+        portasLiberadas: [],
+        sistemaOperacional: sistemaOp === "win32" ? "Windows" : "Linux/Unix",
+        mensagem
+      });
+    } catch (err) {
+      console.error("Erro ao remover porta:", err);
+      res.status(500).json({ mensagem: "Erro ao remover porta do firewall" });
+    }
+  });
 
   return httpServer;
 }

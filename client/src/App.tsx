@@ -13,6 +13,7 @@ import Servicos from "@/pages/Servicos";
 import Processos from "@/pages/Processos";
 import Rede from "@/pages/Rede";
 import Historico from "@/pages/Historico";
+import Firewall from "@/pages/Firewall";
 
 function Router() {
   return (
@@ -22,6 +23,7 @@ function Router() {
       <Route path="/servicos" component={Servicos} />
       <Route path="/processos" component={Processos} />
       <Route path="/rede" component={Rede} />
+      <Route path="/firewall" component={Firewall} />
       <Route path="/historico" component={Historico} />
       <Route component={NotFound} />
     </Switch>

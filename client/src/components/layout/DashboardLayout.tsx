@@ -12,7 +12,8 @@ import {
   Sun,
   Moon,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Shield
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -35,6 +36,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: "Serviços", href: "/servicos", icon: Server },
     { name: "Processos", href: "/processos", icon: Cpu },
     { name: "Rede", href: "/rede", icon: Network },
+    { name: "Firewall", href: "/firewall", icon: Shield },
     { name: "Histórico", href: "/historico", icon: History },
   ];
 

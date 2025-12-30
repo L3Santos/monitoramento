@@ -7,10 +7,10 @@ import { ptBR } from "date-fns/locale";
 import { useQuery } from "@tanstack/react-query";
 
 export default function AnyDesk() {
-  const { data: status, isLoading: statusLoading } = useSystemStatus();
-  const { data: history, isLoading: historyLoading } = useAnydeskHistory();
+  const { data: status, isLoading: carregandoStatus } = useSystemStatus();
+  const { data: historico, isLoading: carregandoHistorico } = useAnydeskHistory();
 
-  const { data: logCompleto, isLoading: logLoading } = useQuery({
+  const { data: logCompleto, isLoading: carregandoLog } = useQuery({
     queryKey: ["/api/anydesk/log-completo"],
     queryFn: async () => {
       const res = await fetch("/api/anydesk/log-completo?limite=200");
@@ -19,7 +19,8 @@ export default function AnyDesk() {
     },
     refetchInterval: 5000,
   });
-  const { data: stats } = useQuery({
+
+  const { data: estatisticas } = useQuery({
     queryKey: ["/api/anydesk/stats"],
     queryFn: async () => {
       const res = await fetch("/api/anydesk/stats");
@@ -29,29 +30,35 @@ export default function AnyDesk() {
     refetchInterval: 10000,
   });
 
-  const isActive = status?.anydesk.ativo;
+  const estaAtivo = status?.anydesk.ativo;
 
   return (
     <DashboardLayout>
-      <div className="space-y-8">
+      <div className="max-w-[1600px] mx-auto space-y-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h2 className="text-3xl font-bold font-mono tracking-tight text-glow">AnyDesk Monitor</h2>
+            <h2 className="text-3xl font-bold font-mono tracking-tight text-glow">Monitor AnyDesk</h2>
             <p className="text-muted-foreground">Gerenciamento e histórico de conexões remotas.</p>
           </div>
         </div>
 
-        <div className={`p-6 rounded-xl border ${isActive ? 'bg-destructive/10 border-destructive/30' : 'bg-primary/5 border-primary/20'} transition-all`}>
+        <div className={cn(
+          "p-6 rounded-xl border transition-all",
+          estaAtivo ? 'bg-destructive/10 border-destructive/30' : 'bg-primary/5 border-primary/20'
+        )}>
           <div className="flex items-center gap-4">
-            <div className={`p-3 rounded-full ${isActive ? 'bg-destructive/20 text-destructive' : 'bg-primary/20 text-primary'}`}>
-              {isActive ? <ShieldAlert className="w-8 h-8" /> : <CheckCircle2 className="w-8 h-8" />}
+            <div className={cn(
+              "p-3 rounded-full",
+              estaAtivo ? 'bg-destructive/20 text-destructive' : 'bg-primary/20 text-primary'
+            )}>
+              {estaAtivo ? <ShieldAlert className="w-8 h-8" /> : <CheckCircle2 className="w-8 h-8" />}
             </div>
             <div>
               <h3 className="text-xl font-bold font-mono">
-                Status: {statusLoading ? "..." : (isActive ? "CONEXÃO REMOTA ATIVA" : "Seguro (Sem conexões)")}
+                Status: {carregandoStatus ? "..." : (estaAtivo ? "CONEXÃO REMOTA ATIVA" : "Seguro (Sem conexões)")}
               </h3>
               <p className="text-muted-foreground text-sm mt-1">
-                {isActive 
+                {estaAtivo 
                   ? "Há uma ou mais sessões remotas ativas neste momento. Monitore com atenção." 
                   : "Nenhuma sessão do AnyDesk detectada no momento."}
               </p>
@@ -59,7 +66,7 @@ export default function AnyDesk() {
           </div>
         </div>
 
-        {isActive && (
+        {estaAtivo && (
           <div className="space-y-4">
              <h3 className="text-lg font-bold font-mono flex items-center gap-2 text-destructive">
                <span className="w-2 h-2 rounded-full bg-destructive animate-pulse"></span>
@@ -67,7 +74,7 @@ export default function AnyDesk() {
              </h3>
              <TerminalTable
               data={status?.anydesk.sessoesAtuais || []}
-              isLoading={statusLoading}
+              isLoading={carregandoStatus}
               columns={[
                 { header: "PID", accessorKey: "pid" },
                 { header: "IP Remoto", accessorKey: "ipRemoto", className: "font-mono font-bold text-destructive" },
@@ -83,23 +90,23 @@ export default function AnyDesk() {
         )}
 
         <div className="space-y-6 pt-4">
-          {stats && (
+          {estatisticas && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="bg-card border border-border rounded-lg p-4">
                 <p className="text-xs text-muted-foreground uppercase tracking-wide">Total Registrado</p>
-                <p className="text-2xl font-mono font-bold text-primary mt-1">{stats.totalRegistros}</p>
+                <p className="text-2xl font-mono font-bold text-primary mt-1">{estatisticas.totalRegistros}</p>
               </div>
               <div className="bg-card border border-border rounded-lg p-4">
                 <p className="text-xs text-muted-foreground uppercase tracking-wide">IPs Únicos</p>
-                <p className="text-2xl font-mono font-bold text-primary mt-1">{stats.ipsUnicos}</p>
+                <p className="text-2xl font-mono font-bold text-primary mt-1">{estatisticas.ipsUnicos}</p>
               </div>
               <div className="bg-card border border-border rounded-lg p-4">
                 <p className="text-xs text-muted-foreground uppercase tracking-wide">Conectados</p>
-                <p className="text-2xl font-mono font-bold text-destructive mt-1">{stats.totalConectados}</p>
+                <p className="text-2xl font-mono font-bold text-destructive mt-1">{estatisticas.totalConectados}</p>
               </div>
               <div className="bg-card border border-border rounded-lg p-4">
                 <p className="text-xs text-muted-foreground uppercase tracking-wide">Desconectados</p>
-                <p className="text-2xl font-mono font-bold text-primary mt-1">{stats.totalDesconectados}</p>
+                <p className="text-2xl font-mono font-bold text-primary mt-1">{estatisticas.totalDesconectados}</p>
               </div>
             </div>
           )}
@@ -114,7 +121,7 @@ export default function AnyDesk() {
             </div>
             <TerminalTable
               data={logCompleto || []}
-              isLoading={logLoading}
+              isLoading={carregandoLog}
               emptyMessage="Nenhum registro no log completo."
               columns={[
                 { header: "IP Remoto", accessorKey: "ipRemoto", className: "font-mono text-primary" },
@@ -134,8 +141,8 @@ export default function AnyDesk() {
                Histórico de Conexões
             </h3>
             <TerminalTable
-              data={history || []}
-              isLoading={historyLoading}
+              data={historico || []}
+              isLoading={carregandoHistorico}
               emptyMessage="Nenhum histórico de conexão registrado."
               columns={[
                 { header: "ID", accessorKey: "id", className: "w-16 text-muted-foreground" },
@@ -152,3 +159,5 @@ export default function AnyDesk() {
     </DashboardLayout>
   );
 }
+
+import { cn } from "@/lib/utils";
